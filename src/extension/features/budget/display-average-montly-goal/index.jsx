@@ -70,18 +70,38 @@ export class DisplayAverageMonthlyGoals extends Feature {
         // 2 Years
         return 1 / 24;
       default:
-        return 0;
+        throw new Error(`Invalid goal frequency id: '${goalFrequencyId}'`);
     }
   }
 
   computeAverageMonthlyGoalForCategory(category) {
-    const avgMonthlyGoal =
-      category.goalType === 'MF'
-        ? category.goalTarget
-        : category.goalTargetAmount * this.goalNfsMultiplier(category.goalFrequency);
+    const computeAvgMonthlyGoal = () => {
+      const computeForNonRepeatingTarget = () => {
+        const totalDurationMonths =
+          category.goalTargetDate.monthsApart(category.goalStartedOnDate) + 1;
+        return category.goalTargetAmount / totalDurationMonths;
+      };
+
+      switch (category.goalType) {
+        case 'MF':
+          return category.goalTarget;
+        case 'NEED':
+          if (category.goalFrequency === 0) {
+            return computeForNonRepeatingTarget();
+          }
+          return category.goalTargetAmount * this.goalNfsMultiplier(category.goalFrequency);
+        case 'TBD':
+          return computeForNonRepeatingTarget();
+        case 'TB':
+        case null:
+          return 0;
+        default:
+          throw new Error(`Invalid goal type: '${category.goalType}'`);
+      }
+    };
 
     return {
-      avgMonthlyGoal,
+      avgMonthlyGoal: computeAvgMonthlyGoal(),
       isChecked: category.get('isChecked'),
     };
   }
