@@ -77,6 +77,12 @@ export class DisplayAverageMonthlyGoals extends Feature {
   computeAverageMonthlyGoalForCategory(category) {
     const computeAvgMonthlyGoal = () => {
       const computeForNonRepeatingTarget = () => {
+        const goalIsNotActive =
+          category.budgetMonth.isBefore(category.goalStartedOnDate) ||
+          category.budgetMonth.isAfter(category.goalTargetDate);
+
+        if (goalIsNotActive) return 0;
+
         const totalDurationMonths =
           category.goalTargetDate.monthsApart(category.goalStartedOnDate) + 1;
         return category.goalTargetAmount / totalDurationMonths;
