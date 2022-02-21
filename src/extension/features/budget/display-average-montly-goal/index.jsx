@@ -4,6 +4,17 @@ import { getEmberView } from 'toolkit/extension/utils/ember';
 import { componentBefore } from 'toolkit/extension/utils/react';
 
 import { InspectorCard } from './InspectorCard';
+import { FormattedCurrency } from './FormattedCurrency';
+import { HARDCODED_TOTAL_INCOME } from './hardcodedTotalIncome';
+
+const BreakdownItem = ({ label, children, className = '' }) => {
+  return (
+    <div className={className}>
+      <div>{label}</div>
+      <div>{children}</div>
+    </div>
+  );
+};
 
 export class DisplayAverageMonthlyGoals extends Feature {
   containerClass = 'tk-average-monthly-goals';
@@ -129,6 +140,7 @@ export class DisplayAverageMonthlyGoals extends Feature {
 
   addAverageMonthlyGoals(element) {
     const averageMonthlyGoals = this.computeAverageMonthlyGoals();
+    const totalIncome = HARDCODED_TOTAL_INCOME;
 
     $('.' + this.containerClass).remove();
 
@@ -137,17 +149,31 @@ export class DisplayAverageMonthlyGoals extends Feature {
       return;
     }
 
-    componentBefore(this.createInspectorElement(averageMonthlyGoals), target);
+    componentBefore(this.createInspectorElement(averageMonthlyGoals, totalIncome), target);
   }
 
-  createInspectorElement(averageMonthlyGoals) {
+  createInspectorElement(averageMonthlyGoals, totalIncome) {
+    const slack = totalIncome - averageMonthlyGoals;
     return (
       <div className={this.containerClass}>
         <InspectorCard
-          title="Average Monthly Goals *POC*"
-          mainAmount={averageMonthlyGoals}
+          title="Average Monthly Goals Slack"
+          mainAmount={slack}
           className="average-monthly-goals-card"
-        ></InspectorCard>
+        >
+          <div className="ynab-breakdown">
+            <BreakdownItem label="Average Monthly Goals">
+              <FormattedCurrency amount={averageMonthlyGoals} />
+            </BreakdownItem>
+            <BreakdownItem label="Total Income" className="extra-bottom-space">
+              <FormattedCurrency amount={totalIncome} />
+            </BreakdownItem>
+
+            <BreakdownItem label="Average Monthly Slack" className="colorize-currency">
+              <FormattedCurrency amount={slack} />
+            </BreakdownItem>
+          </div>
+        </InspectorCard>
       </div>
     );
   }

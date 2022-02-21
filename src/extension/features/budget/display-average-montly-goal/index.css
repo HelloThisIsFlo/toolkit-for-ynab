@@ -1,23 +1,23 @@
-.tk-monthly-goals-overview .colorize-currency .currency.positive {
+.tk-average-monthly-goals .colorize-currency .currency.positive {
   color: var(--budget_balance_positive_background);
 }
 
-.tk-monthly-goals-overview .colorize-currency .currency.negative {
+.tk-average-monthly-goals .colorize-currency .currency.negative {
   color: var(--budget_balance_negative_background);
 }
 
-.tk-monthly-goals-overview .total-income.warning .currency {
+.tk-average-monthly-goals .total-income.warning .currency {
   color: var(--budget_balance_warning_background);
 }
 
-.tk-monthly-goals-overview .goal-remaining-balance.positive .currency {
+.tk-average-monthly-goals .goal-remaining-balance.positive .currency {
   color: var(--budget_balance_positive_background);
 }
 
-.tk-monthly-goals-overview .goal-remaining-balance.negative .currency {
+.tk-average-monthly-goals .goal-remaining-balance.negative .currency {
   color: var(--budget_balance_negative_background);
 }
 
-.tk-monthly-goals-overview .extra-bottom-space {
+.tk-average-monthly-goals .extra-bottom-space {
   margin-bottom: 1rem;
 }
