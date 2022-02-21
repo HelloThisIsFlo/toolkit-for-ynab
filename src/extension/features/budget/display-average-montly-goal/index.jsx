@@ -124,18 +124,21 @@ export class DisplayAverageMonthlyGoals extends Feature {
   }
 
   computeAverageMonthlyGoals() {
-    let averageMonthlyGoals = 0;
+    const sumAvgMonthlyGoals = (catArr) => catArr.reduce((acc, cat) => acc + cat.avgMonthlyGoal, 0);
+    let categories = [];
 
     $('.budget-table-row.is-sub-category').each((_, element) => {
       const category = getEmberView(element.id, 'category');
       const { avgMonthlyGoal, isChecked } = this.computeAverageMonthlyGoalForCategory(category);
-
-      if (isChecked) {
-        averageMonthlyGoals += avgMonthlyGoal;
-      }
+      categories.push({ avgMonthlyGoal, isChecked });
     });
 
-    return averageMonthlyGoals;
+    const checkedCategories = categories.filter((cat) => cat.isChecked);
+    const noCheckedCategories = checkedCategories.length === 0;
+
+    return noCheckedCategories
+      ? sumAvgMonthlyGoals(categories)
+      : sumAvgMonthlyGoals(checkedCategories);
   }
 
   addAverageMonthlyGoals(element) {
