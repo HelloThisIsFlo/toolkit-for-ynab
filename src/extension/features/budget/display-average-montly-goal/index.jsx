@@ -141,8 +141,33 @@ export class DisplayAverageMonthlyGoals extends Feature {
       : sumAvgMonthlyGoals(checkedCategories);
   }
 
+  computerBufferValueForCategory(category) {
+    return {
+      bufferValue: category.goalType === 'TB' ? category.goalTargetAmount : 0,
+      isChecked: category.get('isChecked'),
+    };
+  }
+
+  computeTotalBuffers() {
+    // Same as computeAvergeMonthlyGoal => Refactor
+    const sumBufferValues = (catArr) => catArr.reduce((acc, cat) => acc + cat.bufferValue, 0);
+    let categories = [];
+
+    $('.budget-table-row.is-sub-category').each((_, element) => {
+      const category = getEmberView(element.id, 'category');
+      const { bufferValue, isChecked } = this.computerBufferValueForCategory(category);
+      categories.push({ bufferValue, isChecked });
+    });
+
+    const checkedCategories = categories.filter((cat) => cat.isChecked);
+    const noCheckedCategories = checkedCategories.length === 0;
+
+    return noCheckedCategories ? sumBufferValues(categories) : sumBufferValues(checkedCategories);
+  }
+
   addAverageMonthlyGoals(element) {
     const averageMonthlyGoals = this.computeAverageMonthlyGoals();
+    const totalBuffers = this.computeTotalBuffers();
     const totalIncome = HARDCODED_TOTAL_INCOME;
 
     $('.' + this.containerClass).remove();
@@ -152,24 +177,30 @@ export class DisplayAverageMonthlyGoals extends Feature {
       return;
     }
 
-    componentBefore(this.createInspectorElement(averageMonthlyGoals, totalIncome), target);
+    componentBefore(
+      this.createInspectorElement(averageMonthlyGoals, totalBuffers, totalIncome),
+      target
+    );
   }
 
-  createInspectorElement(averageMonthlyGoals, totalIncome) {
-    const slack = totalIncome - averageMonthlyGoals;
+  createInspectorElement(averageMonthlyGoals, totalBuffers, totalIncome) {
+    const slack = totalIncome - averageMonthlyGoals - totalBuffers;
     return (
       <div className={this.containerClass}>
         <InspectorCard
-          title="Average Monthly Goals Slack"
+          title="Average Monthly Slack"
           mainAmount={slack}
           className="average-monthly-goals-card"
         >
           <div className="ynab-breakdown">
-            <BreakdownItem label="Average Monthly Goals">
-              <FormattedCurrency amount={averageMonthlyGoals} />
-            </BreakdownItem>
-            <BreakdownItem label="Total Income" className="extra-bottom-space">
+            <BreakdownItem label="Total Income" className="colorize-currency">
               <FormattedCurrency amount={totalIncome} />
+            </BreakdownItem>
+            <BreakdownItem label="Average Monthly Goals" className="colorize-currency">
+              <FormattedCurrency amount={-averageMonthlyGoals} />
+            </BreakdownItem>
+            <BreakdownItem label="Total Buffers" className="extra-bottom-space colorize-currency">
+              <FormattedCurrency amount={-totalBuffers} />
             </BreakdownItem>
 
             <BreakdownItem label="Average Monthly Slack" className="colorize-currency">
