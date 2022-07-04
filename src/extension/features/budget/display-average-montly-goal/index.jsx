@@ -35,9 +35,9 @@ export class DisplayAverageMonthlyGoals extends Feature {
     document.querySelector('.' + this.containerClass)?.remove();
   }
 
-  goalNfsMultiplier(goalFrequencyId) {
+  goalNfsMultiplier(goalCadence) {
     const avgNumbersOfSundays = 52 / 12;
-    switch (goalFrequencyId) {
+    switch (goalCadence) {
       case 1:
         // 1 Month
         return 1;
@@ -81,7 +81,7 @@ export class DisplayAverageMonthlyGoals extends Feature {
         // 2 Years
         return 1 / 24;
       default:
-        throw new Error(`Invalid goal frequency id: '${goalFrequencyId}'`);
+        throw new Error(`Invalid goal cadence: '${goalCadence}'`);
     }
   }
 
@@ -103,10 +103,10 @@ export class DisplayAverageMonthlyGoals extends Feature {
         case 'MF':
           return category.goalTarget;
         case 'NEED':
-          if (category.goalFrequency === 0) {
+          if (category.goalCadence === 0) {
             return computeForNonRepeatingTarget();
           }
-          return category.goalTargetAmount * this.goalNfsMultiplier(category.goalFrequency);
+          return category.goalTargetAmount * this.goalNfsMultiplier(category.goalCadence);
         case 'TBD':
           return computeForNonRepeatingTarget();
         case 'TB':
@@ -128,7 +128,7 @@ export class DisplayAverageMonthlyGoals extends Feature {
     let categories = [];
 
     $('.budget-table-row.is-sub-category').each((_, element) => {
-      const category = getEmberView(element.id, 'category');
+      const category = getEmberView(element.id).category;
       const { avgMonthlyGoal, isChecked } = this.computeAverageMonthlyGoalForCategory(category);
       categories.push({ avgMonthlyGoal, isChecked });
     });
@@ -154,8 +154,15 @@ export class DisplayAverageMonthlyGoals extends Feature {
     let categories = [];
 
     $('.budget-table-row.is-sub-category').each((_, element) => {
-      const category = getEmberView(element.id, 'category');
+      const category = getEmberView(element.id).category;
       const { bufferValue, isChecked } = this.computerBufferValueForCategory(category);
+      console.log({
+        cat: category,
+        name: category.displayName,
+        freqId: category.goalFrequencyId,
+        freq: category.goalFrequency,
+        cadence: category.goalCadence,
+      });
       categories.push({ bufferValue, isChecked });
     });
 
@@ -179,7 +186,7 @@ export class DisplayAverageMonthlyGoals extends Feature {
 
     componentBefore(
       this.createInspectorElement(averageMonthlyGoals, totalBuffers, totalIncome),
-      target
+      target[0]
     );
   }
 
