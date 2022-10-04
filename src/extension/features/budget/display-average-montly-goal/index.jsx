@@ -6,6 +6,7 @@ import { componentBefore } from 'toolkit/extension/utils/react';
 import { InspectorCard } from './InspectorCard';
 import { FormattedCurrency } from './FormattedCurrency';
 import { HARDCODED_TOTAL_INCOME } from './hardcodedTotalIncome';
+import { PrintingImprovements } from '../../general/printing-improvements/index';
 
 const BreakdownItem = ({ label, children, className = '' }) => {
   return (
@@ -85,6 +86,10 @@ export class DisplayAverageMonthlyGoals extends Feature {
     }
   }
 
+  notFundedMonthly(category) {
+    return category.masterCategory.name.includes('🔽');
+  }
+
   computeAverageMonthlyGoalForCategory(category) {
     const computeAvgMonthlyGoal = () => {
       const computeForNonRepeatingTarget = () => {
@@ -98,6 +103,10 @@ export class DisplayAverageMonthlyGoals extends Feature {
           category.goalTargetDate.monthsApart(category.goalStartedOnDate) + 1;
         return category.goalTargetAmount / totalDurationMonths;
       };
+
+      if (this.notFundedMonthly(category)) {
+        return 0;
+      }
 
       switch (category.goalType) {
         case 'MF':
@@ -142,8 +151,15 @@ export class DisplayAverageMonthlyGoals extends Feature {
   }
 
   computerBufferValueForCategory(category) {
+    const computeValue = () => {
+      const isNotBuffer = category.goalType !== 'TB';
+      if (isNotBuffer || this.notFundedMonthly(category)) return 0;
+
+      return category.goalTargetAmount;
+    };
+
     return {
-      bufferValue: category.goalType === 'TB' ? category.goalTargetAmount : 0,
+      bufferValue: computeValue(),
       isChecked: category.get('isChecked'),
     };
   }
