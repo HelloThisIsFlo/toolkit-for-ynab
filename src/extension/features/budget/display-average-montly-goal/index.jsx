@@ -220,6 +220,16 @@ export class DisplayAverageMonthlyGoals extends Feature {
   }
 
   invoke() {
-    this.addToolkitEmberHook('budget/budget-inspector', 'didRender', this.addAverageMonthlyGoals);
+    return null;
+  }
+
+  observe(changedNodes) {
+    if (!this.shouldInvoke()) {
+      return;
+    }
+
+    if (changedNodes.has('budget-inspector-button')) {
+      this.addAverageMonthlyGoals();
+    }
   }
 }
