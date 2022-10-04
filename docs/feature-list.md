@@ -197,7 +197,7 @@ Ensure all negative balances are highlighted red instead of yellow, even with cr
 
 ## Live on Last Month's Income
 
-Add a section the budget inspector showing your variance between last month's income and this month's assigned budget for users who still live by the old Rule #4.
+Add a section to the budget inspector showing your variance between last month's income and this month's assigned budget for users who still live by the old Rule #4.
 
 ## Paid in Full Credit Card Assist
 
@@ -239,7 +239,7 @@ Removes the highlight colour from positive (or zero) category balances and colou
 
 ## Add "Auto Distribute" Button To Split Transactions
 
-Distrubutes the remaining total of a split transaction proportionally to all other splits which contain an amount.
+Distributes the remaining total of a split transaction proportionally to all other splits which contain an amount.
 
 ## Add "Check Number" Column
 
@@ -308,10 +308,6 @@ Calculate Internal Rate of Return for Tracking Accounts. Set Tracking Account co
 ## Confirm Transaction Edit Cancellation
 
 Display a confirmation prompt when transaction cancelling a transaction edit by pressing "Enter" guarding against accidentely discarding complex split transactions.
-
-## Custom Flag Names
-
-Add functionality to provide custom flag names in the "Add Flag" menu. A tooltip will also be added to all flags on hover. _**Note**: Custom flag names are stored locally in the browser and will **not** be carried over to other browsers/computers. Custom flag names will be lost if browser data is cleared though the flag colors themselves will remain on the transactions._
 
 ## Deselect Transactions on Save
 

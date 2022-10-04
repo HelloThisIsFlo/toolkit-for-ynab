@@ -1,3 +1,3 @@
 interface YNABBudgetService {
-  monthString: string;
+  activeCategory: {};
 }
