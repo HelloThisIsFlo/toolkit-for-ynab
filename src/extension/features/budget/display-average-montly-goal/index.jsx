@@ -6,7 +6,6 @@ import { componentBefore } from 'toolkit/extension/utils/react';
 import { InspectorCard } from './InspectorCard';
 import { FormattedCurrency } from './FormattedCurrency';
 import { HARDCODED_TOTAL_INCOME } from './hardcodedTotalIncome';
-import { PrintingImprovements } from '../../general/printing-improvements/index';
 
 const BreakdownItem = ({ label, children, className = '' }) => {
   return (
@@ -105,6 +104,9 @@ export class DisplayAverageMonthlyGoals extends Feature {
       };
 
       if (this.notFundedMonthly(category)) {
+        console.log(
+          `Ignoring category because not funded monthly '🔽' | '${category.displayName}'`
+        );
         return 0;
       }
 
