@@ -35,15 +35,23 @@ export class DisplayAverageMonthlyGoals extends Feature {
     document.querySelector('.' + this.containerClass)?.remove();
   }
 
-  goalNfsMultiplier(goalCadence) {
-    const avgNumbersOfSundays = 52 / 12;
-    switch (goalCadence) {
-      case 1:
-        // 1 Month
-        return 1;
-      case 2:
-        // 1 Week
-        return avgNumbersOfSundays;
+  // They changed
+  // goalCadence =>
+  // - 1 for month
+  // - 2 for week
+  // - 13 for year
+  // - Other values deprecated => Make sure by removing from 'switch'
+  //
+  // goalCadenceFrequency =>
+  // - number of 'goalCadence' (eg, 3 for every 3 months)
+  //
+  //
+  //
+  //
+  goalNfsMultiplier(goalCadence, goalCadenceFrequency) {
+    const computeCadence = () => {
+      /* Here is a list of all the value for 'goalCadence' that have been deprecated:
+        (Just keeping in case I mis-understood or if they rollback their update)
       case 3:
         // 2 Months
         return 1 / 2;
@@ -74,14 +82,35 @@ export class DisplayAverageMonthlyGoals extends Feature {
       case 12:
         // 11 Months
         return 1 / 11;
-      case 13:
-        // 12 Months (1 Year)
-        return 1 / 12;
       case 14:
         // 2 Years
         return 1 / 24;
+    */
+
+      switch (goalCadence) {
+        case 1:
+          return 'month';
+        case 2:
+          return 'week';
+        case 13:
+          return 'year';
+        default:
+          throw new Error(`Invalid goal cadence: '${goalCadence}'`);
+      }
+    };
+
+    switch (computeCadence()) {
+      case 'week':
+        return 52 / (12 * goalCadenceFrequency);
+
+      case 'month':
+        return 12 / (12 * goalCadenceFrequency);
+
+      case 'year':
+        return 1 / (12 * goalCadenceFrequency);
+
       default:
-        throw new Error(`Invalid goal cadence: '${goalCadence}'`);
+        throw new Error(`Invalid cadence: '${computeCadence()}'`);
     }
   }
 
@@ -117,7 +146,10 @@ export class DisplayAverageMonthlyGoals extends Feature {
           if (category.goalCadence === 0) {
             return computeForNonRepeatingTarget();
           }
-          return category.goalTargetAmount * this.goalNfsMultiplier(category.goalCadence);
+          return (
+            category.goalTargetAmount *
+            this.goalNfsMultiplier(category.goalCadence, category.goalCadenceFrequency)
+          );
         case 'TBD':
           return computeForNonRepeatingTarget();
         case 'TB':
@@ -177,9 +209,8 @@ export class DisplayAverageMonthlyGoals extends Feature {
       console.log({
         cat: category,
         name: category.displayName,
-        freqId: category.goalFrequencyId,
-        freq: category.goalFrequency,
-        cadence: category.goalCadence,
+        goalCadence: category.goalCadence,
+        goalCadenceFrequency: category.goalCadenceFrequency,
       });
       categories.push({ bufferValue, isChecked });
     });
