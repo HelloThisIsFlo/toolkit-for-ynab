@@ -261,6 +261,10 @@ Add an option to toggle the memo column under the account page's "View" menu
 
 Add a button to expand/collapse all splits for the current account register.
 
+## Add Reset Column Widths Button
+
+Adds button to reset column widths on in the accounts View menu.
+
 ## Add Scrollbars to Edit Menu
 
 Resize the edit menu to fit on the screen and add scrollbars.
@@ -295,7 +299,7 @@ Move the notification bar to the bottom as an overlay preventing transactions fr
 
 ## Bulk Edit Memos
 
-Add an option to the "Edit Transaction(s)" menu to "Edit Memo(s)" for all selected transactions.
+Add an option to the "Edit Transaction(s)" menu to "Edit Memo(s)" for all selected transactions. Allows adding a prefix or a suffix to selected memos.
 
 ## Bulk Edit Payees
 
