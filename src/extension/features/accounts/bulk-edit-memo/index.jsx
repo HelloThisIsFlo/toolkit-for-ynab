@@ -32,13 +32,12 @@ const EditMemo = () => {
 
   const handleConfirm = () => {
     const checkedRows = containerLookup('service:accounts').areChecked;
-    const { transactionsCollection } = getEntityManager();
     getEntityManager().performAsSingleChangeSet(() => {
       checkedRows.forEach((transaction) => {
-        const entity = transactionsCollection.findItemByEntityId(transaction.entityId);
+        const entity = getEntityManager().getTransactionById(transaction.entityId);
         const memoPrevValue = transaction.memo || '';
         if (entity) {
-          entity.set('memo', makeNewMemo(memoPrevValue));
+          entity.memo = makeNewMemo(memoPrevValue);
         }
       });
     });
@@ -157,19 +156,13 @@ export class BulkEditMemo extends Feature {
     return require('./index.css');
   }
 
-  shouldInvoke() {
-    return true;
-  }
-
-  invoke() {
-    this.addToolkitEmberHook(
-      'modals/register/edit-transactions',
-      'didInsertElement',
-      this.injectBulkEditMemo,
-      {
-        guard: () => document.querySelector('.modal-account-edit-transaction-list') !== null,
-      }
-    );
+  observe(changedNodes) {
+    if (
+      changedNodes.has('modal-overlay active  ynab-u modal-popup modal-account-register-action-bar')
+    ) {
+      const element = document.querySelector('.modal-account-register-action-bar');
+      this.injectBulkEditMemo(element);
+    }
   }
 
   destroy() {

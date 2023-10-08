@@ -39,12 +39,16 @@ export class ToggleSplitButton extends React.Component {
   };
 
   hideAllSplits = () => {
-    const { scheduledTransactionsCollection, transactionsCollection } = getEntityManager();
+    let { selectedAccountId } = getAccountsService();
     const collapsedSplitsMap = {};
 
-    [scheduledTransactionsCollection, transactionsCollection].forEach((collection) => {
+    const account = getEntityManager().getAccountById(selectedAccountId);
+    const transactions = account.getTransactions();
+    const scheduledTransactions = account.scheduledTransactions;
+
+    [transactions, scheduledTransactions].forEach((collection) => {
       collection.reduce((reduced, transaction) => {
-        if (transaction.getIsSplit()) {
+        if (transaction.isSplit) {
           reduced[transaction?.entityId] = true;
         }
 

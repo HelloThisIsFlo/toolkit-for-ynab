@@ -1,6 +1,6 @@
 {
   "name": "toolkit-for-ynab",
-  "version": "3.7.3",
+  "version": "3.8.1",
   "private": true,
   "scripts": {
     "prepare": "husky install",
@@ -77,7 +77,6 @@
     "IncomeVsExpenseHoverHighlight",
     "PrintingImprovements",
     "ResetColumnWidths",
-    "RightClickToEdit",
     "ShowIntercom",
     "SplitKeyboardShortcut",
     "ToggleAccountColumns",
