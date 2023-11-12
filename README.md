@@ -59,7 +59,7 @@ This extension uses three main things in its build process:
   content scripts) into single files and manages most of the build process.
 
 1. Clone the repository.
-2. Install Node.js (>= v14.17.0 and <= v16) and Yarn (>= v1.10.0).
+2. Install Node.js (>=18.12.1) and Yarn (>= v1.10.0).
 
    - On **macOS** both prerequisites can be setup using `brew`. Ensure command line developer tools (`xcode-select --install`) are also installed.
    - On **Windows** `node` and `yarn` can be installed via Chocolatey (`choco`) package manager.
@@ -69,7 +69,11 @@ This extension uses three main things in its build process:
 5. Run `yarn build:development` from within the folder you cloned which will build the Toolkit.
 
 - Whilst developing, you may prefer to run `yarn watch` which will monitor the project
-  directory for changes and run `yarn build:development` automatically for you.
+  directory for changes and run `yarn build:development` automatically for you. If you're
+  not going to add new features and plan to work only on existing ones (i.e. your changes
+  don't require regenerating indexes) you can use `yarn watch:webpack`, this will compile
+  changes only your changes to code, without regenerating indexes which might noticeably
+  speed up the development.
 
 5.  Deploying the extension:
 
