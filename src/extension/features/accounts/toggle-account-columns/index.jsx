@@ -12,7 +12,7 @@ import { l10n, getToolkitStorageKey, setToolkitStorageKey } from 'toolkit/extens
 export const ShowMemoButton = ({ defaultIsShown, id, toggleState }) => {
   const toggleHidden = () => {
     toggleState(!defaultIsShown);
-    getModalService().closeModal();
+    getModalService()?.closeModal();
   };
 
   return (
@@ -48,17 +48,9 @@ export class ToggleAccountColumns extends Feature {
     return require('./index.css');
   }
 
-  shouldInvoke() {
-    return true;
-  }
-
-  invoke() {
-    this.addToolkitEmberHook('modal', 'didRender', this.insertToggles, {
-      guard: () => document.querySelector('.modal-account-view-options') !== null,
-    });
-
-    if (isCurrentRouteAccountsPage()) {
-      this.updateShowMemoState(this.getShowMemoState());
+  observe(changedNodes) {
+    if (changedNodes.has('modal-overlay active ynab-u modal-generic modal-account-view-options')) {
+      this.insertToggles(document.querySelector('.modal-account-view-options'));
     }
   }
 

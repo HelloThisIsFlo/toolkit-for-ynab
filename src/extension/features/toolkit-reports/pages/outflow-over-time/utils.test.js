@@ -189,7 +189,8 @@ describe('Utils', () => {
 
       const excpected = [
         {
-          name: '2022-01',
+          name: 'Jan 2022',
+          type: 'line',
           data: [
             { x: 4, y: 100, custom: rawData },
             { x: 7, y: 600, custom: rawData },
@@ -199,7 +200,8 @@ describe('Utils', () => {
           ],
         },
         {
-          name: '2022-02',
+          name: 'Feb 2022',
+          type: 'line',
           data: [
             { x: 13, y: 200, custom: rawData },
             { x: 19, y: 900, custom: rawData },

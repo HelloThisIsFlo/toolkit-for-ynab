@@ -22,7 +22,7 @@ export class CategoryActivityCopy extends Feature {
     const modal = document.querySelector('.modal-budget-activity');
     const modalService = getModalService();
 
-    if (modal && modalService.isModalOpen) {
+    if (modal && modalService && modalService.isModalOpen) {
       let transactions: YNABTransaction[] | undefined = undefined;
       if (modalService.currentModal === 'modals/budget/activity' && isCurrentRouteBudgetPage()) {
         transactions = modalService.modalValue?.selectedActivityTransactions;
@@ -46,8 +46,8 @@ export class CategoryActivityCopy extends Feature {
     if (!this.shouldInvoke()) return;
 
     if (
-      nodes.has('modal-overlay active  ynab-u modal-popup modal-budget-activity') ||
-      nodes.has('modal-overlay active  pure-u modal-popup modal-budget-activity')
+      nodes.has('modal-overlay active ynab-u modal-popup modal-budget-activity') ||
+      nodes.has('modal-overlay active pure-u modal-popup modal-budget-activity')
     ) {
       this.invoke();
     }

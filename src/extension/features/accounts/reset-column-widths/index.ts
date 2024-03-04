@@ -1,5 +1,4 @@
 import { Feature } from 'toolkit/extension/features/feature';
-import { serviceLookup } from 'toolkit/extension/utils/ember';
 import { getRegisterGridService } from 'toolkit/extension/utils/ynab';
 
 export class ResetColumnWidths extends Feature {
@@ -21,7 +20,7 @@ export class ResetColumnWidths extends Feature {
   }
 
   observe(changedNodes: Set<string>) {
-    if (changedNodes.has('modal-overlay active  ynab-u modal-generic modal-account-view-options')) {
+    if (changedNodes.has('modal')) {
       this.addButton();
     }
   }
