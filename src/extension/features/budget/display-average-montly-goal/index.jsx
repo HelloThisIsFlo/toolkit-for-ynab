@@ -1,10 +1,11 @@
 import React from 'react';
 import { Feature } from 'toolkit/extension/features/feature';
-import { getEmberView } from 'toolkit/extension/utils/ember';
 import { componentBefore } from 'toolkit/extension/utils/react';
 
 import { InspectorCard } from './InspectorCard';
 import { FormattedCurrency } from './FormattedCurrency';
+import { getBudgetMonthDisplaySubCategory } from '../utils';
+
 import { HARDCODED_TOTAL_INCOME } from './hardcodedTotalIncome';
 
 const BreakdownItem = ({ label, children, className = '' }) => {
@@ -162,7 +163,7 @@ export class DisplayAverageMonthlyGoals extends Feature {
 
     return {
       avgMonthlyGoal: computeAvgMonthlyGoal(),
-      isChecked: category.get('isChecked'),
+      isChecked: category.isChecked,
     };
   }
 
@@ -171,7 +172,7 @@ export class DisplayAverageMonthlyGoals extends Feature {
     let categories = [];
 
     $('.budget-table-row.is-sub-category').each((_, element) => {
-      const category = getEmberView(element.id).category;
+      const category = getBudgetMonthDisplaySubCategory(element.dataset.entityId);
       const { avgMonthlyGoal, isChecked } = this.computeAverageMonthlyGoalForCategory(category);
       categories.push({ avgMonthlyGoal, isChecked });
     });
@@ -194,7 +195,7 @@ export class DisplayAverageMonthlyGoals extends Feature {
 
     return {
       bufferValue: computeValue(),
-      isChecked: category.get('isChecked'),
+      isChecked: category.isChecked,
     };
   }
 
@@ -204,7 +205,7 @@ export class DisplayAverageMonthlyGoals extends Feature {
     let categories = [];
 
     $('.budget-table-row.is-sub-category').each((_, element) => {
-      const category = getEmberView(element.id).category;
+      const category = getBudgetMonthDisplaySubCategory(element.dataset.entityId);
       const { bufferValue, isChecked } = this.computerBufferValueForCategory(category);
       console.log({
         cat: category,
