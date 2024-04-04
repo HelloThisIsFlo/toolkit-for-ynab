@@ -1,12 +1,15 @@
 import React from 'react';
 import { Feature } from 'toolkit/extension/features/feature';
-import { getEmberView } from 'toolkit/extension/utils/ember';
 import { componentBefore } from 'toolkit/extension/utils/react';
-import { getCurrentBudgetDate, getEntityManager } from 'toolkit/extension/utils/ynab';
+import {
+  getBudgetService,
+  getCurrentBudgetDate,
+  getEntityManager,
+} from 'toolkit/extension/utils/ynab';
 
 import { FormattedCurrency } from './FormattedCurrency';
 import { InspectorCard } from './InspectorCard';
-import { isClassInChangedNodes } from 'toolkit/extension/utils/helpers';
+import { getBudgetMonthDisplaySubCategory } from '../utils';
 
 const BreakdownItem = ({ label, children, className = '' }) => {
   return (
@@ -37,7 +40,7 @@ export class DisplayTotalMonthlyGoals extends Feature {
   }
 
   extractCategoryGoalInformation(element) {
-    const category = getEmberView(element.id).category;
+    const category = getBudgetMonthDisplaySubCategory(element.dataset.entityId);
     if (!category) {
       return;
     }
@@ -67,12 +70,22 @@ export class DisplayTotalMonthlyGoals extends Feature {
       );
     });
 
+    const creditCardActivity = this.getCreditActivity();
+
     // For information about the total spent value see https://github.com/toolkit-for-ynab/toolkit-for-ynab/issues/2828
     return [
       budgetedCalculation?.immediateIncome || 0,
       budgetedCalculation?.budgeted || 0,
-      budgetedCalculation?.cashOutflows + 2 * (budgetedCalculation?.creditOutflows || 0),
+      (budgetedCalculation?.outflows || creditCardActivity) - creditCardActivity,
     ];
+  }
+
+  getCreditActivity() {
+    const budgetService = getBudgetService();
+    const category = budgetService.budgetMonthDisplayItems.find((item) => {
+      return item.isCreditCardPaymentCategory;
+    });
+    return category?.activity ?? 0;
   }
 
   calculateTotalGoals() {
@@ -205,7 +218,7 @@ export class DisplayTotalMonthlyGoals extends Feature {
       return;
     }
 
-    if (isClassInChangedNodes('budget-inspector-button', changedNodes)) {
+    if (changedNodes.has('budget-inspector-button')) {
       this.addMonthlyGoalsOverview();
     }
   }

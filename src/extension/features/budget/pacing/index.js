@@ -1,7 +1,6 @@
 import debounce from 'debounce';
 import { Feature } from 'toolkit/extension/features/feature';
 import { isCurrentMonthSelected } from 'toolkit/extension/utils/ynab';
-import { getEmberView } from 'toolkit/extension/utils/ember';
 import {
   getDeemphasizedCategories,
   pacingForCategory,
@@ -9,7 +8,10 @@ import {
 } from 'toolkit/extension/utils/pacing';
 import { formatCurrency } from 'toolkit/extension/utils/currency';
 import { l10n } from 'toolkit/extension/utils/toolkit';
-import { budgetRowInChangesSet } from 'toolkit/extension/features/budget/utils';
+import {
+  budgetRowInChangesSet,
+  getBudgetMonthDisplaySubCategory,
+} from 'toolkit/extension/features/budget/utils';
 
 export class Pacing extends Feature {
   injectCSS() {
@@ -25,18 +27,28 @@ export class Pacing extends Feature {
   }
 
   invoke() {
+    const pacingCells = $('.tk-budget-table-cell-pacing');
+
     if (!isCurrentMonthSelected()) {
-      $('.tk-budget-table-cell-pacing').remove();
+      pacingCells.remove();
       return;
     }
 
-    if ($('.tk-budget-table-cell-pacing').length) {
+    const budgetRows = $('.js-budget-table-row');
+    const budgetRowsWithoutPacing = budgetRows.filter(
+      (_, el) => !el.querySelector('.tk-budget-table-cell-pacing')
+    );
+    const nBudgetRowsWithoutPacing = budgetRowsWithoutPacing.length;
+
+    const shouldReRenderPacing = pacingCells.length === 0 || nBudgetRowsWithoutPacing > 0;
+
+    if (!shouldReRenderPacing) {
       return;
     }
 
     this.ensureHeader();
 
-    $('.js-budget-table-row').each((_, el) => {
+    budgetRowsWithoutPacing.each((_, el) => {
       this.addPacing(el);
     });
   }
@@ -80,7 +92,7 @@ export class Pacing extends Feature {
       return;
     }
 
-    const category = getEmberView(element.id)?.category;
+    const category = getBudgetMonthDisplaySubCategory(element.dataset.entityId);
     if (!category) {
       return;
     }
