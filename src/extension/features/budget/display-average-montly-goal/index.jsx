@@ -156,6 +156,9 @@ export class DisplayAverageMonthlyGoals extends Feature {
         case 'TB':
         case null:
           return 0;
+        case 'DEBT':
+          console.warn('"DEBT" goal type not supported yet!');
+          return 0;
         default:
           throw new Error(`Invalid goal type: '${category.goalType}'`);
       }
