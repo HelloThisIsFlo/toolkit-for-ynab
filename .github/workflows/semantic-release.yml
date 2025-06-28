@@ -45,7 +45,7 @@ jobs:
 
       - name: Semantic Release
         run: npx semantic-release --debug
-        env:
+        with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Merge main branch -> develop
