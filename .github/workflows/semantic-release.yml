@@ -43,23 +43,16 @@ jobs:
       - name: Install Dependencies
         run: yarn install
 
-      - name: Semantic Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release --debug
-
-      - name: Test git push with GITHUB_TOKEN
+      - name: Configure git user and remote
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/toolkit-for-ynab/toolkit-for-ynab.git
-          git fetch origin
-          git checkout -b test-push
-          echo "test $(date)" >> testfile.txt
-          git add testfile.txt
-          git commit -m "Test push from GH Actions"
-          git push origin test-push
 
+      - name: Semantic Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release --debug
 
       - name: Merge main branch -> develop
         uses: devmasx/merge-branch@master
