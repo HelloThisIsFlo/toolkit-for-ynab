@@ -44,9 +44,9 @@ jobs:
         run: yarn install
 
       - name: Semantic Release
-        run: npx semantic-release --debug
-        with:
+        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release --debug
 
       - name: Merge main branch -> develop
         uses: devmasx/merge-branch@master
