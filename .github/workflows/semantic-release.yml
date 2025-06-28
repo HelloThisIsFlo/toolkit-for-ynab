@@ -12,6 +12,7 @@ on:
 
 env:
   HUSKY: 0
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 permissions:
   packages: write
