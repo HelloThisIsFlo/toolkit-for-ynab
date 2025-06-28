@@ -3,7 +3,8 @@
  */
 const config = {
   branches: ['main'],
-  repositoryUrl: 'https://github.com/toolkit-for-ynab/toolkit-for-ynab.git',
+  repositoryUrl:
+    'https://x-access-token:${GITHUB_TOKEN}@github.com/toolkit-for-ynab/toolkit-for-ynab.git',
   plugins: [
     [
       '@semantic-release/commit-analyzer',
