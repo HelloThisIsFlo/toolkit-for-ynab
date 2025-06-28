@@ -3,6 +3,7 @@
  */
 const config = {
   branches: ['main'],
+  repositoryUrl: 'git@github.com:toolkit-for-ynab/toolkit-for-ynab.git',
   plugins: [
     [
       '@semantic-release/commit-analyzer',
