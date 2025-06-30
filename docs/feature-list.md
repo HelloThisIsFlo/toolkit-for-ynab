@@ -187,10 +187,6 @@ Adds Markdown parsing to notes, allowing support for links, bullet points, and o
 
 Hides "Age of Money" in the budget header. YNAB will continue to run its Age of Money calculations, so the data will always be up to date if you decide to show it again.
 
-## Hide Negative/Zero Categories When Covering Overspending
-
-Removes categories which have a zero or negative balance from the "Cover Overspending" menu since they don't have any way of helping.
-
 ## Highlight Budget Rows On Hover
 
 Shows a light gray background on category rows when hovered over.
@@ -328,10 +324,6 @@ Enables Markdown parsing for memos, allowing support for links and other formatt
 ## Enlarge Small Icons
 
 Makes the uncleared, cleared and reconciled icons slightly larger and easier to click.
-
-## Hyperlinks in the memo field
-
-Add support for links in memos on the accounts page.
 
 ## Modify First Day of the Week
 
