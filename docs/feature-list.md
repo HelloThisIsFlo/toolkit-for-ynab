@@ -74,7 +74,11 @@ Changes print styles so budget and account sections can be easily printed. Due t
 
 ## Privacy Mode
 
-Obscure dollar amounts everywhere until hovered. In toggle mode, a lock icon will appear in the lower left corner of YNAB. Click to enable or disable privacy mode.</details>
+Obscure dollar amounts everywhere until hovered. In toggle mode, a lock icon will appear in the lower left corner of YNAB. Click to enable or disable privacy mode.
+
+## Reword "Plan" to "Budget"
+
+Change navigation button title from "Plan" back to "Budget"</details>
 
 <details><summary>Budget (Click to Expand/Collapse)</summary>
 
@@ -324,6 +328,10 @@ Enables Markdown parsing for memos, allowing support for links and other formatt
 ## Enlarge Small Icons
 
 Makes the uncleared, cleared and reconciled icons slightly larger and easier to click.
+
+## Hyperlinks in the memo field
+
+Add support for links in memos on the accounts page.
 
 ## Modify First Day of the Week
 
