@@ -1,6 +1,7 @@
 import React from 'react';
 import { Feature } from 'toolkit/extension/features/feature';
-import { componentBefore } from 'toolkit/extension/utils/react';
+import { componentAfter } from 'toolkit/extension/utils/react';
+import { isCurrentRouteBudgetPage } from 'toolkit/extension/utils/ynab';
 
 import { InspectorCard } from './InspectorCard';
 import { FormattedCurrency } from './FormattedCurrency';
@@ -29,7 +30,7 @@ export class DisplayAverageMonthlyGoals extends Feature {
   }
 
   shouldInvoke() {
-    return true;
+    return isCurrentRouteBudgetPage();
   }
 
   destroy() {
@@ -135,7 +136,7 @@ export class DisplayAverageMonthlyGoals extends Feature {
 
       if (this.notFundedMonthly(category)) {
         console.log(
-          `Ignoring category because not funded monthly '🔽' | '${category.displayName}'`
+          `Ignoring category because not funded monthly '🔽' | '${category.displayName}'`,
         );
         return 0;
       }
@@ -225,21 +226,25 @@ export class DisplayAverageMonthlyGoals extends Feature {
     return noCheckedCategories ? sumBufferValues(categories) : sumBufferValues(checkedCategories);
   }
 
-  addAverageMonthlyGoals(element) {
+  addAverageMonthlyGoals() {
     const averageMonthlyGoals = this.computeAverageMonthlyGoals();
     const totalBuffers = this.computeTotalBuffers();
     const totalIncome = HARDCODED_TOTAL_INCOME;
 
     $('.' + this.containerClass).remove();
 
-    const target = $('.card.budget-breakdown-monthly-totals', element);
-    if (!target.length) {
+    // Look for the first card in the budget inspector (month's Summary)
+    // We'll inject our component after this card
+    const $firstCard = $('.budget-inspector-content .card').first();
+
+    if (!$firstCard.length) {
+      console.warn('No first card found in budget inspector, returning early');
       return;
     }
 
-    componentBefore(
+    componentAfter(
       this.createInspectorElement(averageMonthlyGoals, totalBuffers, totalIncome),
-      target[0]
+      $firstCard[0],
     );
   }
 
@@ -273,7 +278,7 @@ export class DisplayAverageMonthlyGoals extends Feature {
   }
 
   invoke() {
-    return null;
+    this.addAverageMonthlyGoals();
   }
 
   observe(changedNodes) {
